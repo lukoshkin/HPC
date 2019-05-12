@@ -1,5 +1,5 @@
 # Monte-Carlo integration with CUDA
-This program computes the integral <img src="https://latex.codecogs.com/gif.latex?\int_{-a}^{a} \int_{-a}^{a} e^{-(x-y)^2}dxdy" />  
+This program computes the integral ![equation](https://latex.codecogs.com/gif.latex?%5Cint_%7B-a%7D%5E%7Ba%7D%20%5Cint_%7B-a%7D%5E%7Ba%7D%20e%5E%7B-%28x-y%29%5E2%7Ddxdy)
 
 Compile and run with the commands  
 
