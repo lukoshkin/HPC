@@ -4,20 +4,27 @@ __global__
 void laplace(float * U1, float * U2) {
     int i = blockIdx.x;
     int j = threadIdx.x;
-    U2[(i + 1) * blockDim.x + j + 1]        // i, j
-        = U1[i * blockDim.x + j + 1]        // i-1, j
-        + U1[(i + 1) * blockDim.x + j]      // i, j-1
-        + U1[(i + 2) * blockDim.x + j + 1]  // i+1, j
-        + U1[(i + 1) * blockDim.x + j + 2]; // i, j+1
-    U2[(i + 1) * blockDim.x + j + 1] *= .25;
+    int side = blockDim.x + 2;
+    U2[(i + 1) * side + j + 1]        // i, j
+        = U1[i * side + j + 1]        // i-1, j
+        + U1[(i + 1) * side + j]      // i, j-1
+        + U1[(i + 2) * side + j + 1]  // i+1, j
+        + U1[(i + 1) * side + j + 2]; // i, j+1
+    U2[(i + 1) * side + j + 1] *= .25;
 }
 
 int main() {
-    int T = 200;
+    int T = 10000;
     int side = 128;
     int area = side * side;
 
     float * U1, * U2, * devU1, * devU2;
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+
+    cudaEventRecord(start);  
+    //---------------------------
     U1 = (float *)malloc(area * sizeof(float));
     U2 = (float *)malloc(area * sizeof(float));
     cudaMalloc(&devU1, area * sizeof(float));
@@ -44,6 +51,12 @@ int main() {
     }
     cudaMemcpy(U1, devU1, area * sizeof(float), 
                                  cudaMemcpyDeviceToHost);
+    //----------------------------
+    cudaEventRecord(stop);
+    float elapsed_time(0);
+    cudaEventElapsedTime(&elapsed_time, start, stop);
+    printf("elapsed time: %f ms\n", elapsed_time);  
+
     FILE * cfout = fopen("output.bin", "wb");
     fwrite(U1, sizeof(float), area, cfout);
     fclose(cfout);
