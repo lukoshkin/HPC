@@ -1,5 +1,5 @@
 # Monte-Carlo integration with CUDA
-This program computes the integral $$\int_{-a}^{a} \int_{-a}^{a} e^{-(x-y)^2}dxdy$$
+This program computes the integral <img src="https://latex.codecogs.com/gif.latex?\int_{-a}^{a} \int_{-a}^{a} e^{-(x-y)^2}dxdy" />  
 
 Compile and run with the commands  
 
