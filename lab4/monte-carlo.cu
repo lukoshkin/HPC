@@ -2,7 +2,6 @@
 #include <math.h>
 #include <curand.h>
 
-
 __global__
 void halve_and_sum(float * data) {
     uint i = blockIdx.x * blockDim.x + threadIdx.x; 
@@ -27,7 +26,6 @@ __device__ void warpReduce(volatile float * sdata, uint tid) {
     if (blockSize >=  4) sdata[tid] += sdata[tid + 2];
     if (blockSize >=  2) sdata[tid] += sdata[tid + 1];
 }
-
 
 template <uint dimSize, uint blockSize>
 __global__ void sum_reduction(float * gdata) {
@@ -59,6 +57,8 @@ __global__ void sum_reduction(float * gdata) {
     if (tid < 32) warpReduce<blockSize>(sdata, tid);
     if (tid == 0) gdata[blockIdx.x] = sdata[0];
 }
+
+
 
 int main(int argc, char ** argv) {
     curandGenerator_t gen; 
@@ -92,6 +92,7 @@ int main(int argc, char ** argv) {
     cudaDeviceSynchronize();
     //------------------------------
     cudaEventRecord(stop);
+
     cudaEventElapsedTime(&elapsed_time, start, stop);
     printf("res = %f\n", vol * data[0] / (n_blocks * n_threads));
     printf("elapsed time: %f ms\n", elapsed_time);
