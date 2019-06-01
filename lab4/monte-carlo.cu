@@ -1,3 +1,7 @@
+// Compile & run with `nvcc monte-carlo.cu -lcurand`
+// Based on the presentation of Mark Harris:
+// https://developer.download.nvidia.com/assets/cuda/files/reduction.pdf
+
 #include <stdio.h>
 #include <math.h>
 #include <curand.h>
@@ -69,7 +73,6 @@ int main(int argc, char ** argv) {
     size_t n_samples = n_blocks * n_threads << 2;
     float * data;
 
-    float elapsed_time;
     cudaEvent_t start, stop;
     cudaEventCreate(&start); 
     cudaEventCreate(&stop); 
@@ -89,10 +92,11 @@ int main(int argc, char ** argv) {
                             sizeof(float) * n_threads>>>(data);
     sum_reduction<1, n_blocks><<<1, n_blocks, 
                             sizeof(float) * n_blocks>>>(data);
-    cudaDeviceSynchronize();
     //------------------------------
     cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
 
+    float elapsed_time;
     cudaEventElapsedTime(&elapsed_time, start, stop);
     printf("res = %f\n", vol * data[0] / (n_blocks * n_threads));
     printf("elapsed time: %f ms\n", elapsed_time);
