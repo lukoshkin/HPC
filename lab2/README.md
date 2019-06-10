@@ -10,6 +10,8 @@ mpic++ schelling.cpp
 mpirun -n <n_proc> ./a.out <n_iters> <threshold>
 ```
 
+***Output***: The program writes the initial and after `n_iters` distributions of city residents to files `initial.bin` and `resulting.bin` respectively.
+
 ## Other exercises
 
-There are several seminar's tasks (`naive_transfer.cpp`, `transfer_with_mask.cpp`, `write_to_file.cpp`). From their names it is clear what they solve.
+There are several seminar's tasks (`naive_transfer.cpp`, `transfer_with_mask.cpp`, `write_to_file.cpp`). From their names it is clear what they solve. Additional instructions can be found in the comments of the source files.
