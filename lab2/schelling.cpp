@@ -1,3 +1,7 @@
+// Compile & run (for example) with:
+// mpic++ schelling.cpp
+// mpirun -n 8 ./a.out 1000 .51
+
 #include <random>
 #include <algorithm>
 #include "mpi.h"
