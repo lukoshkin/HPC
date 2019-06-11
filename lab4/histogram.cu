@@ -1,3 +1,7 @@
+// Compile & run with 
+// `nvcc histogram.cu`
+// `./a.out`
+
 #include <cstdio>
 #include <curand_kernel.h>
 
@@ -8,6 +12,7 @@
 // because of the warp size. However, it is not possible
 // to confirm it in this task, even with fixed seed,
 // since the thread execution order can't be fixed
+const uint mult = 16;
 const uint n_bins = 32;
 const uint n_blocks = 256;
 const uint n_threads = 256;
@@ -22,7 +27,7 @@ void setupExperiment(curandState * state) {
 // state can be read once and used in local memory, then 
 // stored back into global memory (see CURAND documentation)
 __global__
-void shmemAtomics(curandState * state, uint * buffer) {
+void smemAtomics(curandState * state, uint * buffer) {
     __shared__ uint sdata[n_bins];
     int i = blockIdx.x;
     int j = threadIdx.x;
@@ -64,8 +69,8 @@ int main() {
     cudaEventRecord(start);
     //-------------------------------
     setupExperiment<<<n_blocks, n_threads>>>(devStates);
-    for (uint k=0; k<16; ++k) 
-        shmemAtomics<<<n_blocks, n_threads>>>(devStates, hist);
+    for (uint k=0; k<mult; ++k) 
+        smemAtomics<<<n_blocks, n_threads>>>(devStates, hist);
     histsPileUp<<<1, n_bins>>>(hist);
     //-------------------------------
     cudaEventRecord(stop);
@@ -73,6 +78,10 @@ int main() {
 
     float elapsed_time(0);
     cudaEventElapsedTime(&elapsed_time, start, stop);
+    printf(" .:General Info:.\n");
+    printf("data size: %i\nnumber of bins: %i\n\n",
+            mult * n_blocks * n_threads, n_bins);
+
     printf("Elapsed time: %f ms\n", elapsed_time);
     printf("Results are written to 'output.bin'\n");
 

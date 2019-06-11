@@ -108,7 +108,7 @@ int main(int argc, char ** argv) {
     size_t n_blocks = 512;
     size_t block_size = 2048;
     size_t n_el = n_blocks * block_size;
-    printf("The number of discretization points: %i\n", n_el);
+    printf("Number of discretization points: %i\n", n_el);
 
     float * idata, * odata, * sums;
     cudaMallocManaged(&idata, n_el * sizeof(float));
