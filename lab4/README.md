@@ -45,3 +45,7 @@ nvcc scanBlelloch.cu
 ```
 
 where `x` defines the lower and upper limits of the integral, i.e. [-x, x]
+
+## Visualization
+
+See the visualization for **Histogram** and **Blelloch Scan** in `Visualization.ipynb` 
