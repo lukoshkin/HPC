@@ -9,8 +9,7 @@
 #include <time.h>
 
 int main() {
-    time_t t;
-    srand((unsigned)time(&t));
+    srand((uint)time(NULL));
 
     //omp_set_dynamic(0);       // `0/1` - disable/enable dynamic teams
     //omp_set_num_threads(8);   // set 8 threads for all parallel regions 
